@@ -66,6 +66,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const bookingsCollection = database.collection("bookings");
       const paymentsCollection = database.collection('payments');
       const pendingReviewCollection = database.collection('pendingReview');
+      const employeeReviewCollection = database.collection('userReview');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -309,6 +310,20 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    //get employee review given by manager
+    app.get('/employeeReviews/:email', verifyJWT, async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      // console.log(email);
+      // console.log(req.decoded);
+      const decodedEmail = req.decoded.email;
+      // console.log('decoded', decodedEmail)
+      if (email === decodedEmail) {
+        const query = { email: email };
+        const cursor = employeeReviewCollection.find(query);
+        const reviews = await cursor.toArray();
+        return res.send(reviews);
+      }
+    })
 
 
 
