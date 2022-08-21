@@ -65,6 +65,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const taskCollection = database.collection('tasks');
       const bookingsCollection = database.collection("bookings");
       const paymentsCollection = database.collection('payments');
+      const pendingReviewCollection = database.collection('pendingReview');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -271,6 +272,25 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const result = await taskCollection.deleteOne(filter);
       res.send(result);
 
+    })
+
+
+    //get pending review task;
+    app.get('/pendingReview/:email', verifyJWT, async (req:Request | any, res:Response) => {
+      const appointee = req.params.email;
+      // console.log("appointee");
+      const decodedEmail = req.decoded.email;
+      // console.log('decoded', decodedEmail)
+      if (appointee === decodedEmail) {
+        const query = { appointee: appointee };
+        const cursor = pendingReviewCollection.find(query);
+        const tasks = await cursor.toArray();
+        return res.send(tasks);
+      }
+
+      else {
+        return res.status(403).send({ message: 'Forbidden Access' });
+      }
     })
 
 
