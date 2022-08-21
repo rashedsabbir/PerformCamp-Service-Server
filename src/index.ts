@@ -311,6 +311,8 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    
+
     //get employee review given by manager
     app.get('/employeeReviews/:email', verifyJWT, async (req:Request | any, res:Response) => {
       const email = req.params.email;
@@ -346,7 +348,21 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(result);
     })
 
+    //get feedback
+    app.get('/feedback/:email', verifyJWT, async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      const decodedEmail = req.decoded.email;
+      if (email === decodedEmail) {
+        const query = { email: email };
+        const cursor = feedbackCollection.find(query);
+        const feedbacks = await cursor.toArray();
+        return res.send(feedbacks);
+      }
 
+      else {
+        return res.status(403).send({ message: 'Forbidden Access' });
+      }
+    })
 
 
 
