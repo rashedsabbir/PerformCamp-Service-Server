@@ -326,6 +326,12 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       }
     })
 
+    //get employee review
+    app.get('/employeeReview', verifyJWT, async (req:Request | any, res:Response) => {
+      const reviews = await employeeReviewCollection.find().toArray();
+      res.send(reviews);
+    })
+
     //Add Employee
     app.post('/employee', async (req:Request | any, res:Response) => {
       const employee = req.body;
