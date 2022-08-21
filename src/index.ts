@@ -60,8 +60,8 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       await client.connect()
       console.log('database connected')
       const database = client.db("PerformCamp");
-      
-      
+      const customerReviews = database.collection("customerReviews");
+
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
       //   const requesterAccount = await userCollection.findOne({ email: requester });
@@ -73,7 +73,11 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       //   }
       // }
 
-    
+    //get all reviews from database
+    app.get("/customerReviews", async (req:Request | any, res:Response) => {
+      const result = await customerReviews.find({}).toArray()
+      res.json(result)
+    })
 
 
     }
