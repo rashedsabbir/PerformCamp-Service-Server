@@ -173,7 +173,13 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(result);
     })
 
-
+    //get tasks
+    app.get("/task", async (req:Request | any, res:Response) => {
+      const q = req.query;
+      const cursor = taskCollection.find(q);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
 
 
