@@ -164,6 +164,14 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(booking)
     })
 
+    app.delete('/bookings/:id', async (req:Request | any, res:Response) => {
+      const id = req.params.id;
+      console.log(id)
+      const filter = { _id: ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(filter);
+      res.send(result);
+    })
+
     //get all bookings 
     app.get("/bookings", async (req:Request | any, res:Response) => {
       const bookings = await bookingsCollection.find().toArray();
