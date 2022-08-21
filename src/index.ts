@@ -68,6 +68,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const pendingReviewCollection = database.collection('pendingReview');
       const employeeReviewCollection = database.collection('userReview');
       const employeeCollection = database.collection('employee');
+      const feedbackCollection = database.collection('feedbacks');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -362,6 +363,13 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       else {
         return res.status(403).send({ message: 'Forbidden Access' });
       }
+    })
+
+    //post feedback
+    app.post('/feedback', async (req:Request | any, res:Response) => {
+      const feedback = req.body;
+      const result = await feedbackCollection.insertOne(feedback);
+      res.send(result);
     })
 
 
