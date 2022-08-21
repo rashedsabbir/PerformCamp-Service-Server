@@ -62,6 +62,17 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const database = client.db("PerformCamp");
       
       
+      // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
+      //   const requester = req.decoded.email;
+      //   const requesterAccount = await userCollection.findOne({ email: requester });
+      //   if (requesterAccount.role === 'Manager') {
+      //     next();
+      //   }
+      //   else {
+      //     return res.status(403).send({ message: 'Forbidden Access' });
+      //   }
+      // }
+
     
 
 
