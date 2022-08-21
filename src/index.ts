@@ -365,14 +365,21 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       }
     })
 
-    //post feedback
+    //post feedback task
     app.post('/feedback', async (req:Request | any, res:Response) => {
       const feedback = req.body;
       const result = await feedbackCollection.insertOne(feedback);
       res.send(result);
     })
 
+    //delete feedback task by id
+    app.delete('/feedback/:id', verifyJWT, async (req:Request | any, res:Response) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await feedbackCollection.deleteOne(filter);
+      res.send(result);
 
+    })
 
 
 
