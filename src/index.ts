@@ -62,6 +62,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const database = client.db("PerformCamp");
       const customerReviews = database.collection("customerReviews");
       const userCollection = database.collection('users');
+      const taskCollection = database.collection('tasks');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -95,7 +96,18 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send({ manager: isManager });
     })
 
+    //get task
+    app.get("/task", async (req:Request | any, res:Response) => {
+      const q = req.query;
+      const cursor = taskCollection.find(q);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
+
+
+
+    
     }
     finally { 
 
