@@ -63,6 +63,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const customerReviews = database.collection("customerReviews");
       const userCollection = database.collection('users');
       const taskCollection = database.collection('tasks');
+      const bookingsCollection = database.collection("bookings");
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -147,6 +148,13 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    // post services
+    app.post('/bookings', (req:Request | any, res:Response) => {
+      console.log(req.body)
+      const bookings = req.body;
+      const result = bookingsCollection.insertOne(bookings)
+      res.send(result);
+    })
 
 
 
