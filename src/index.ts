@@ -67,6 +67,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const paymentsCollection = database.collection('payments');
       const pendingReviewCollection = database.collection('pendingReview');
       const employeeReviewCollection = database.collection('userReview');
+      const employeeCollection = database.collection('employee');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -325,7 +326,12 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       }
     })
 
-
+    //Add Employee
+    app.post('/employee', async (req:Request | any, res:Response) => {
+      const employee = req.body;
+      const result = await employeeCollection.insertOne(employee);
+      res.send(result);
+    })
 
 
 
