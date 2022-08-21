@@ -164,6 +164,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(booking)
     })
 
+    //delete booking by id
     app.delete('/bookings/:id', async (req:Request | any, res:Response) => {
       const id = req.params.id;
       console.log(id)
@@ -176,6 +177,19 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
     app.get("/bookings", async (req:Request | any, res:Response) => {
       const bookings = await bookingsCollection.find().toArray();
       res.send(bookings);
+    })
+
+    //Post payment
+    app.post("/create-payment-intent", async (req:Request | any, res:Response) => {
+      const service = req.body;
+      const price = service.price;
+      const amount = price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+        payment_method_types: ["card"],
+      })
+      res.send({ clientSecret: paymentIntent.client_secret })
     })
 
     //Set role to manager
