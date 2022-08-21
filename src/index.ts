@@ -156,7 +156,11 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(result);
     })
 
-
+    //get all bookings 
+    app.get("/bookings", async (req:Request | any, res:Response) => {
+      const bookings = await bookingsCollection.find().toArray();
+      res.send(bookings);
+    })
 
 
 
