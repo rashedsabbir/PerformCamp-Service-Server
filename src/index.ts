@@ -64,6 +64,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const userCollection = database.collection('users');
       const taskCollection = database.collection('tasks');
       const bookingsCollection = database.collection("bookings");
+      const paymentsCollection = database.collection('payments');
 
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
@@ -190,6 +191,22 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
         payment_method_types: ["card"],
       })
       res.send({ clientSecret: paymentIntent.client_secret })
+    })
+
+    //Patch booking by id
+    app.patch('/bookings/:id', async (req:Request | any, res:Response) => {		
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          paid: true,
+          transaction: payment.transaction
+        }
+      }
+      const result = await paymentsCollection.insertOne(payment);
+      const updateOrder = await bookingsCollection.updateOne(filter, updateDoc);
+      res.send(updateDoc);
     })
 
     //Set role to manager
