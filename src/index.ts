@@ -217,6 +217,15 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    //delete task by id
+    app.delete('/task/:id', verifyJWT, async (req:Request | any, res:Response) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await taskCollection.deleteOne(filter);
+      res.send(result);
+
+    })
+
 
 
 
