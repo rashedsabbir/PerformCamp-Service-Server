@@ -102,26 +102,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send({ manager: isManager });
     })
 
-    //get task
-    app.get("/task", async (req:Request | any, res:Response) => {
-      const q = req.query;
-      const cursor = taskCollection.find(q);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-
-    //Update task
-    app.put('/task/:id', async (req:Request | any, res:Response) => {
-      const id = req.params.id;
-      const updatedTask = req.body;
-      const filter = { _id: ObjectId(id) };
-      const updateDoc = {
-        $set: updatedTask,
-      };
-      const result = await taskCollection.updateOne(filter, updateDoc);
-      res.send(result);
-
-    })
+    
 
     //get all Users
     app.get("/user", async (req:Request | any, res:Response) => {
@@ -254,6 +235,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const result = await taskCollection.insertOne(task);
       res.send(result);
     })
+
 
     //Update task
     app.put('/task/:id', async (req:Request | any, res:Response) => {
