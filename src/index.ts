@@ -197,6 +197,12 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       }
     })
 
+    //post task
+    app.post('/task', async (req:Request | any, res:Response) => {
+      const task = req.body;
+      const result = await taskCollection.insertOne(task);
+      res.send(result);
+    })
 
 
 
