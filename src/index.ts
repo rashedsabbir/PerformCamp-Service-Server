@@ -79,6 +79,12 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.json(result)
     })
 
+    //post reviews
+    app.post("/customerReviews", async (req:Request | any, res:Response) => {
+      const item = req.body
+      const result = await customerReviews.insertOne(item)
+      res.json(result)
+    })
 
     }
     finally { 
