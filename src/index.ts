@@ -162,7 +162,16 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(bookings);
     })
 
-
+    //Set role to manager
+    app.put('/user_admin/:email', async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { role: 'Manager' },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
 
 
 
