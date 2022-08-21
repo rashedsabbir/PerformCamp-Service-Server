@@ -293,7 +293,12 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       }
     })
 
-
+    //post pending review task
+    app.post('/pendingReview', async (req:Request | any, res:Response) => {
+      const task = req.body;
+      const result = await pendingReviewCollection.insertOne(task);
+      res.send(result);
+    })
 
 
 
