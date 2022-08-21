@@ -181,7 +181,21 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       res.send(result);
     });
 
+    //Get task by assign email
+    app.get('/task/:email', verifyJWT, async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      const decodedEmail = req.decoded.email;
+      if (email === decodedEmail) {
+        const query = { email: email };
+        const cursor = taskCollection.find(query);
+        const tasks = await cursor.toArray();
+        return res.send(tasks);
+      }
 
+      else {
+        return res.status(403).send({ message: 'Forbidden Access' });
+      }
+    })
 
 
 
