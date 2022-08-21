@@ -11,15 +11,15 @@ declare namespace Express {
 
 declare namespace NodeJS {  export interface ProcessEnv {    HOST: string;    DB_URL: string;    DB_NAME?: string;  }}
 
-
+//require
 const app: Express= express();
 const port =process.env.PORT || 5000;
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId, } = require('mongodb');
 const jwt = require('jsonwebtoken');
-
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+//cors policy allowedOrigins
 const allowedOrigins = ['http://localhost:3000'];
 
 const options: cors.CorsOptions = {
@@ -29,7 +29,7 @@ const options: cors.CorsOptions = {
 app.use(cors(options)); /* NEW */
 app.use(express.json());
 
-
+//mongodb connect
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.0e6jqyu.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -37,9 +37,24 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1
 });
 
+//JWT verify
+function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).send({ message: 'UnAuthorized Access' });
+  }
 
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err:Error, decoded:DecodeSuccessCallback) {
+    if (err) {
+      return res.status(403).send({ message: 'Forbidden Access' });
+    }
+    req.decoded = decoded;
+    next();
+  });
+}
 
-
+//database collections
   async function run() {
     try {
       await client.connect()
@@ -47,7 +62,7 @@ const client = new MongoClient(uri, {
       const database = client.db("PerformCamp");
       
       
-     
+    
 
 
     }
