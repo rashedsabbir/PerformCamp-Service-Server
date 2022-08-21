@@ -117,7 +117,11 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
-
+    //get all Users
+    app.get("/user", async (req:Request | any, res:Response) => {
+      const result = await userCollection.find().toArray()
+      res.send(result)
+    })
 
     }
     finally { 
