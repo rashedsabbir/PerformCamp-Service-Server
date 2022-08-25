@@ -66,6 +66,7 @@ function run() {
             const employeeReviewCollection = database.collection('userReview');
             const employeeCollection = database.collection('employee');
             const feedbackCollection = database.collection('feedbacks');
+            const leaderBoardCollection = database.collection('leaderboard');
             // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
             //   const requester = req.decoded.email;
             //   const requesterAccount = await userCollection.findOne({ email: requester });
@@ -316,6 +317,34 @@ function run() {
                 const filter = { _id: ObjectId(id) };
                 const result = yield feedbackCollection.deleteOne(filter);
                 res.send(result);
+            }));
+            //get tasks by manager email
+            app.get('/managerTask/:email', verifyJWT, (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const appointee = req.params.email;
+                const decodedEmail = req.decoded.email;
+                if (appointee === decodedEmail) {
+                    const query = { appointee: appointee };
+                    const cursor = taskCollection.find(query);
+                    const tasks = yield cursor.toArray();
+                    return res.send(tasks);
+                }
+            }));
+            //Update leaderboard
+            app.put('/leaderboard/:email', (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const email = req.params.email;
+                const filter = { email: email };
+                const updatedLeaderboard = req.body;
+                const options = { upsert: true };
+                const updateDoc = {
+                    $set: updatedLeaderboard,
+                };
+                const result = yield leaderBoardCollection.updateOne(filter, updateDoc, options);
+                res.send(result);
+            }));
+            //get leaderboard
+            app.get('/leaderboard', (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const leaderboard = yield leaderBoardCollection.find().toArray();
+                res.send(leaderboard);
             }));
         }
         finally {
