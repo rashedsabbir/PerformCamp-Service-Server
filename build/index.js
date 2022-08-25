@@ -274,12 +274,12 @@ function run() {
                 }
             }));
             //get employee review
-            app.get('/employeeReview', verifyJWT, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            app.get('/employeeReviews', verifyJWT, (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const reviews = yield employeeReviewCollection.find().toArray();
                 res.send(reviews);
             }));
             //post employee review
-            app.post('/employeeReview', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            app.post('/employeeReviews', (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const review = req.body;
                 const result = yield employeeReviewCollection.insertOne(review);
                 res.send(result);
