@@ -69,7 +69,7 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
       const employeeReviewCollection = database.collection('userReview');
       const employeeCollection = database.collection('employee');
       const feedbackCollection = database.collection('feedbacks');
-
+      const leaderBoardCollection = database.collection('leaderboard');
       // const verifyManager = async (req:Request | any, res:Response, next:NextFunction) => {
       //   const requester = req.decoded.email;
       //   const requesterAccount = await userCollection.findOne({ email: requester });
@@ -312,13 +312,13 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
     })
 
     //get employee review
-    app.get('/employeeReview', verifyJWT, async (req:Request | any, res:Response) => {
+    app.get('/employeeReviews', verifyJWT, async (req:Request | any, res:Response) => {
       const reviews = await employeeReviewCollection.find().toArray();
       res.send(reviews);
     })
 
     //post employee review
-    app.post('/employeeReview', async (req:Request | any, res:Response) => {
+    app.post('/employeeReviews', async (req:Request | any, res:Response) => {
       const review = req.body;
       const result = await employeeReviewCollection.insertOne(review);
       res.send(result);
@@ -363,11 +363,37 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    //get tasks by manager email
+   app.get('/managerTask/:email', verifyJWT, async (req:Request | any, res:Response) => {
+    const appointee = req.params.email;
+    const decodedEmail = req.decoded.email;
+    if (appointee === decodedEmail) {
+      const query = { appointee: appointee };
+      const cursor = taskCollection.find(query);
+      const tasks = await cursor.toArray();
+      return res.send(tasks);
+    }
+  })
 
+  //Update leaderboard
+  app.put('/leaderboard/:email', async (req:Request | any, res:Response) => {
+    const email = req.params.email;
+    const filter = { email: email };
+    const updatedLeaderboard = req.body;
+    const options = { upsert: true };
+    const updateDoc = {
+      $set: updatedLeaderboard,
+    };
+    const result = await leaderBoardCollection.updateOne(filter, updateDoc, options);
+    res.send(result);
 
+  })
 
-
-
+  //get leaderboard
+  app.get('/leaderboard', async (req:Request | any, res:Response) => {
+  const leaderboard = await leaderBoardCollection.find().toArray();
+  res.send(leaderboard);
+    })
 
 
 
