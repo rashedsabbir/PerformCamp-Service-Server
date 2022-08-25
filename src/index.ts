@@ -312,13 +312,13 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
     })
 
     //get employee review
-    app.get('/employeeReview', verifyJWT, async (req:Request | any, res:Response) => {
+    app.get('/employeeReviews', verifyJWT, async (req:Request | any, res:Response) => {
       const reviews = await employeeReviewCollection.find().toArray();
       res.send(reviews);
     })
 
     //post employee review
-    app.post('/employeeReview', async (req:Request | any, res:Response) => {
+    app.post('/employeeReviews', async (req:Request | any, res:Response) => {
       const review = req.body;
       const result = await employeeReviewCollection.insertOne(review);
       res.send(result);
