@@ -20,7 +20,7 @@ const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 //cors policy allowedOrigins
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://performcamp-8967f.web.app', 'https://performcamp-home.web.app'];
 
 const options: cors.CorsOptions = {
   origin: allowedOrigins
