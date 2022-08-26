@@ -358,6 +358,6 @@ app.get('/', (req, res) => {
 app.get('/check', (req, res) => {
     res.send('Checking Server Routing, All ok!');
 });
-app.listen(port, () => {
+app.listen((process.env.PORT || 5000), () => {
     console.log(`Connected successfully on port ${port}`);
 });
