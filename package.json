@@ -9,8 +9,8 @@
   "scripts": {
     "start": "npx tsc && node build/index.js",
     "start-dev": "npx tsc && nodemon build/index.js",
-    "build": "node build",
-    "heroku-postbuild": "node build --prod", 
+    "build": "tsc -p .",
+    "heroku-postbuild": "tsc -p .", 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
