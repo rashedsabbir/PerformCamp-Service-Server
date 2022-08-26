@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "14.x"
-    },
+    "node": "16.17.0"
+  },
   "scripts": {
     "start": "npx tsc && node build/index.js",
     "start-dev": "npx tsc && nodemon build/index.js",
-    "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,6 +20,7 @@
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.0",
+    "node": "^16.17.0",
     "nodemon": "^2.0.19",
     "stripe": "^10.3.0"
   },
