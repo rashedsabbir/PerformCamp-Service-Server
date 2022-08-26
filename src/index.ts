@@ -375,6 +375,8 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
     }
   })
 
+  
+
   //Update leaderboard
   app.put('/leaderboard/:email', async (req:Request | any, res:Response) => {
     const email = req.params.email;
