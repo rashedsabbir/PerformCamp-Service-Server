@@ -22,7 +22,7 @@ const { MongoClient, ServerApiVersion, ObjectId, } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 //cors policy allowedOrigins
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
 const options = {
     origin: allowedOrigins
 };
@@ -358,6 +358,6 @@ app.get('/', (req, res) => {
 app.get('/check', (req, res) => {
     res.send('Checking Server Routing, All ok!');
 });
-app.listen(port, () => {
+app.listen((process.env.PORT || 5000), () => {
     console.log(`Connected successfully on port ${port}`);
 });
