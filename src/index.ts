@@ -134,6 +134,14 @@ function verifyJWT(req:Request | any, res:Response, next:NextFunction) {
 
     })
 
+    //delete user by email
+    app.delete('/user/:email', async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const result = await userCollection.deleteOne(filter);
+      res.send(result);
+    })
+
     // post services
     app.post('/bookings', (req:Request | any, res:Response) => {
       console.log(req.body)
