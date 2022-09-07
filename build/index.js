@@ -122,9 +122,9 @@ function run() {
                     token
                 });
             }));
+            //delete user by email
             app.delete('/user/:email', (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const email = req.params.email;
-                console.log(email);
                 const filter = { email: email };
                 const result = yield userCollection.deleteOne(filter);
                 res.send(result);
