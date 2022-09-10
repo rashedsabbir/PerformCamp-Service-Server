@@ -20,7 +20,7 @@ const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 //cors policy allowedOrigins
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://performcamp-8967f.web.app', 'https://performcamp-home.web.app'];
 
 const options: cors.CorsOptions = {
   origin: allowedOrigins
@@ -134,6 +134,14 @@ async function run() {
 
     })
 
+    //delete user by email
+    app.delete('/user/:email', async (req:Request | any, res:Response) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const result = await userCollection.deleteOne(filter);
+      res.send(result);
+    })
+
     // post services
     app.post('/bookings', (req: Request | any, res: Response) => {
       console.log(req.body)
@@ -205,8 +213,8 @@ async function run() {
       res.send(result);
     })
 
-    //get tasks
-    app.get("/task", async (req: Request | any, res: Response) => {
+    //get all tasks
+    app.get("/task", async (req:Request | any, res:Response) => {
       const q = req.query;
       const cursor = taskCollection.find(q);
       const result = await cursor.toArray();
@@ -263,9 +271,7 @@ async function run() {
     //get pending review task;
     app.get('/pendingReview/:email', verifyJWT, async (req: Request | any, res: Response) => {
       const appointee = req.params.email;
-      // console.log("appointee");
       const decodedEmail = req.decoded.email;
-      // console.log('decoded', decodedEmail)
       if (appointee === decodedEmail) {
         const query = { appointee: appointee };
         const cursor = pendingReviewCollection.find(query);
@@ -299,10 +305,7 @@ async function run() {
     //get employee review given by manager
     app.get('/employeeReviews/:email', verifyJWT, async (req: Request | any, res: Response) => {
       const email = req.params.email;
-      // console.log(email);
-      // console.log(req.decoded);
       const decodedEmail = req.decoded.email;
-      // console.log('decoded', decodedEmail)
       if (email === decodedEmail) {
         const query = { email: email };
         const cursor = employeeReviewCollection.find(query);
@@ -364,15 +367,37 @@ async function run() {
     })
 
     //get tasks by manager email
-    app.get('/managerTask/:email', verifyJWT, async (req: Request | any, res: Response) => {
-      const appointee = req.params.email;
-      const decodedEmail = req.decoded.email;
-      if (appointee === decodedEmail) {
-        const query = { appointee: appointee };
-        const cursor = taskCollection.find(query);
-        const tasks = await cursor.toArray();
-        return res.send(tasks);
-      }
+   app.get('/managerTask/:email', verifyJWT, async (req:Request | any, res:Response) => {
+    const appointee = req.params.email;
+    const decodedEmail = req.decoded.email;
+    if (appointee === decodedEmail) {
+      const query = { appointee: appointee };
+      const cursor = taskCollection.find(query);
+      const tasks = await cursor.toArray();
+      return res.send(tasks);
+    }
+  })
+
+  
+
+  //Update leaderboard from review data
+  app.put('/leaderboard/:email', async (req:Request | any, res:Response) => {
+    const email = req.params.email;
+    const filter = { email: email };
+    const updatedLeaderboard = req.body;
+    const options = { upsert: true };
+    const updateDoc = {
+      $set: updatedLeaderboard,
+    };
+    const result = await leaderBoardCollection.updateOne(filter, updateDoc, options);
+    res.send(result);
+
+  })
+
+  //get leaderboard
+  app.get('/leaderboard', async (req:Request | any, res:Response) => {
+  const leaderboard = await leaderBoardCollection.find().toArray();
+  res.send(leaderboard);
     })
 
     //Update leaderboard
@@ -412,7 +437,7 @@ app.get('/check', (req: Request, res: Response) => {
   res.send('Checking Server Routing, All ok!');
 });
 
-app.listen(port, () => {
-  console.log(`Connected successfully on port ${port}`);
-
+app.listen((process.env.PORT || 5000), ()=> {
+    console.log(`Connected successfully on port ${port}`);
+    
 });

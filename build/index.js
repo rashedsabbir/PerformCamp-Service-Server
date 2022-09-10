@@ -22,7 +22,7 @@ const { MongoClient, ServerApiVersion, ObjectId, } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 //cors policy allowedOrigins
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'https://performcamp-8967f.web.app', 'https://performcamp-home.web.app'];
 const options = {
     origin: allowedOrigins
 };
@@ -121,6 +121,13 @@ function run() {
                     result,
                     token
                 });
+            }));
+            //delete user by email
+            app.delete('/user/:email', (req, res) => __awaiter(this, void 0, void 0, function* () {
+                const email = req.params.email;
+                const filter = { email: email };
+                const result = yield userCollection.deleteOne(filter);
+                res.send(result);
             }));
             // post services
             app.post('/bookings', (req, res) => {
@@ -358,6 +365,6 @@ app.get('/', (req, res) => {
 app.get('/check', (req, res) => {
     res.send('Checking Server Routing, All ok!');
 });
-app.listen(port, () => {
+app.listen((process.env.PORT || 5000), () => {
     console.log(`Connected successfully on port ${port}`);
 });
