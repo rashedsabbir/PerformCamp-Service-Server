@@ -193,7 +193,7 @@ function run() {
                 const result = yield userCollection.updateOne(filter, updateDoc);
                 res.send(result);
             }));
-            //get tasks
+            //get all tasks
             app.get("/task", (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const q = req.query;
                 const cursor = taskCollection.find(q);
@@ -241,9 +241,7 @@ function run() {
             //get pending review task;
             app.get('/pendingReview/:email', verifyJWT, (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const appointee = req.params.email;
-                // console.log("appointee");
                 const decodedEmail = req.decoded.email;
-                // console.log('decoded', decodedEmail)
                 if (appointee === decodedEmail) {
                     const query = { appointee: appointee };
                     const cursor = pendingReviewCollection.find(query);
@@ -270,10 +268,7 @@ function run() {
             //get employee review given by manager
             app.get('/employeeReviews/:email', verifyJWT, (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const email = req.params.email;
-                // console.log(email);
-                // console.log(req.decoded);
                 const decodedEmail = req.decoded.email;
-                // console.log('decoded', decodedEmail)
                 if (email === decodedEmail) {
                     const query = { email: email };
                     const cursor = employeeReviewCollection.find(query);
@@ -336,7 +331,7 @@ function run() {
                     return res.send(tasks);
                 }
             }));
-            //Update leaderboard
+            //Update leaderboard from review data
             app.put('/leaderboard/:email', (req, res) => __awaiter(this, void 0, void 0, function* () {
                 const email = req.params.email;
                 const filter = { email: email };
